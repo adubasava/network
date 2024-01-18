@@ -1,0 +1,68 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+    <h2 style="padding-left: 5px;">All Posts</h2>
+    {% if user.is_authenticated %}
+    <div id="new_post">
+        <h5 style="padding-left: 10px;">New post</h5>            
+        <form id="create-post">
+            <textarea name="create" id="create"></textarea>
+            <br/>
+            <input type="submit" value="Post" style="background-color: rgb(0, 98, 255); color: white; border-radius: 8px; border: 2px solid rgb(0, 98, 255);">
+        </form>   
+    </div>
+    {% endif %}
+
+    {% for post in page_obj %} 
+        {% if user.is_authenticated and request.user == post.author %}
+            <div id="{{post.id}}" style="display: none; border-style: solid; border-width: 1px; border-color: darkgrey; padding: 10px; margin: 20px;">
+                <textarea id="t {{post.id}}" name="edit" id="edit" style="width: 100%;" value="{{ post.content }}">{{ post.content }}</textarea>
+                <br/>                
+                <button class="save" style="background-color:darkseagreen; border-radius: 8px; color: white; border: 2px solid darkseagreen;">Save</button> 
+            </div>
+        {% endif %}
+        <div id="edit {{post.id}}" style="display: block; border-style: solid; border-width: 1px; border-color: darkgrey; padding: 10px; margin: 20px;">            
+            <span style="font-size: larger;"><a href="{% url 'profile' username=post.author %}">{{ post.author }}</a></span><br/><br/>
+            {% if user.is_authenticated and request.user == post.author %}                
+                <button class="editbtn" style="background-color: coral; border-radius: 8px; color: white; border: 2px solid coral;">Edit</button>
+                <br/>
+            {% endif %}
+            <strong><span id="s {{post.id}}">{{ post.content }}</span></strong><br/>
+            <span style="color: dimgray;">{{ post.time }}</span><br/>
+
+            &#10084; <span id="l {{post.id}}">{{ post.likes }}</span><br/>
+            {% if user.is_authenticated %}   
+                {% if post not in liked_posts %}         
+                    <button id="like {{ post.id }}" onclick="like('{{ post.id }}')" style="display: block; background-color: mediumseagreen; border-radius: 8px; color: white; border: 2px solid mediumseagreen;" value="Like">Like</button>
+                    <button id="unlike {{ post.id }}" onclick="unlike('{{ post.id }}')" style="display: none; background-color: tomato; border-radius: 8px; color: white; border: 2px solid tomato;" value="Unlike">Unlike</button> 
+                {% else %}
+                    <button id="like {{ post.id }}" onclick="like('{{ post.id }}')" style="display: none; background-color: mediumseagreen; border-radius: 8px; color: white; border: 2px solid mediumseagreen;" value="Like">Like</button>
+                    <button id="unlike {{ post.id }}" onclick="unlike('{{ post.id }}')" style="display: block; background-color: tomato; border-radius: 8px; color: white; border: 2px solid tomato;" value="Unlike">Unlike</button>                
+                {% endif %}              
+            {% endif %}   
+        </div>        
+    {% endfor %}
+    
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item" style="padding-left: 20px;"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <li class="page-item" style="padding-left: 20px;"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/likes.js' %}">    
+    </script>
+    <script src="{% static 'network/index.js' %}">
+    </script>
+    <script src="{% static 'network/edit.js' %}">
+    </script>
+
+{% endblock %}

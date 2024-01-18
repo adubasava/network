@@ -1,0 +1,31 @@
+#new_post {
+    border-style: solid;
+    border-width: 1px;
+    border-color: darkgrey;
+    padding: 10px;
+    margin: 20px;
+}
+
+#create {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#edit {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#all_posts {
+    border-style: solid;
+    border-width: 1px;
+    border-color: darkgrey;
+    padding: 10px;
+    margin: 20px;
+}
+
+#profile {    
+    padding: 10px;
+    margin: 20px;
+}
+
